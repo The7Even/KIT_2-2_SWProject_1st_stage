@@ -75,7 +75,8 @@ class SearchModule:
 
         # 테스트 계획 및 오류 코드: 검색 결과가 없을 경우
         if not filtered_results:
-            print(f"[안내] '{query}'에 대한 검색 결과가 없습니다. (E_NO_RESULT)")
+            target = query or normalized_region_code
+            print(f"[안내] '{target}'에 대한 검색 결과가 없습니다. (E_NO_RESULT)")
             return []
 
         return filtered_results
@@ -100,7 +101,7 @@ class SearchModule:
             return []
 
         codes = {
-            str(region["code"])
+            str(region.get("code"))
             for region in regions
             if isinstance(region, dict) and region.get("code") is not None
         }

@@ -36,6 +36,8 @@ class RegionCodeClient:
 
     def find_regions(self, region_name: str) -> list[dict[str, str]]:
         """지역명으로 API를 조회하고 ``code``·``name`` 목록을 반환합니다."""
+        if not isinstance(region_name, str):
+            raise RegionCodeApiError("지역명은 문자열이어야 합니다.")
         query = region_name.strip()
         if not query:
             raise RegionCodeApiError("지역명은 비어 있을 수 없습니다.")
