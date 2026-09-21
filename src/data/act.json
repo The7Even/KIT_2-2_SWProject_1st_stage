@@ -1,0 +1,12 @@
+[
+  {
+    "activity_id": 47113118000201,
+    "facility_id": 471131180002,
+    "title": "도시 미화 작업",
+    "description": "OO시 길거리 쓰레기 줍기 활동",
+    "location": "경상북도 OO시 OOOOOO",
+    "service_hours": 2,
+    "status": 1,
+    "rating": 4.5
+  }
+]
