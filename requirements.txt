@@ -1,0 +1,2 @@
+PyQt6>=6.8
+requests>=2.32
