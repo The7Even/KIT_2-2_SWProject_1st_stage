@@ -25,6 +25,25 @@ class RequirementsCoverageTests(unittest.TestCase):
 
         self.assertFalse(BackupModule(root / "backup").backup([root / "missing.json"]))
 
+    def test_backup_keeps_five_backups_per_json_file(self):
+        root = Path(tempfile.mkdtemp())
+        backup_dir = root / "backup"
+        repository = JsonRepository()
+        sources = [root / f"data_{index}.json" for index in range(4)]
+        for source in sources:
+            repository.save(source, [{"value": 1}])
+        module = BackupModule(backup_dir, repository)
+
+        for _ in range(6):
+            self.assertTrue(module.backup(sources))
+
+        self.assertEqual(len(list(backup_dir.glob("*/*.json"))), 20)
+        for source in sources:
+            self.assertEqual(
+                len(list(backup_dir.glob(f"*/{source.name}"))),
+                5,
+            )
+
     def test_search_requires_title_and_location_fields(self):
         root = Path(tempfile.mkdtemp())
         path = root / "act.json"

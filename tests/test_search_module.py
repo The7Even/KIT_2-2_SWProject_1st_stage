@@ -1,6 +1,10 @@
 import unittest
 
-from src.region_code_client import RegionCodeApiError, RegionCodeClient
+from src.region_code_client import (
+    LocalRegionCodeClient,
+    RegionCodeApiError,
+    RegionCodeClient,
+)
 from src.search_module import SearchModule
 
 
@@ -62,6 +66,16 @@ class SearchModuleTests(unittest.TestCase):
 
 
 class RegionCodeClientTests(unittest.TestCase):
+    def test_local_client_hides_parent_city_when_districts_exist(self):
+        client = LocalRegionCodeClient()
+
+        cities = client.list_cities("4100000000")
+        city_codes = {city["code"] for city in cities}
+
+        self.assertNotIn("4111000000", city_codes)
+        self.assertIn("4111100000", city_codes)
+        self.assertTrue(client.list_districts("4111100000"))
+
     def test_api_response_is_mapped_to_internal_shape(self):
         session = FakeSession(
             FakeResponse({"data": [{"admCode": 4711311800, "admName": "\uad6c\ubbf8\uc2dc"}]})
@@ -81,7 +95,7 @@ class RegionCodeClientTests(unittest.TestCase):
             session.request,
             (
                 "https://example.test/regions",
-                {"query": "\uad6c\ubbf8"},
+                {"searchKeyword": "\uad6c\ubbf8"},
                 5.0,
             ),
         )

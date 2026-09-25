@@ -87,7 +87,31 @@ class ActivityTimeModule:
             )
         except JsonRepositoryError as error:
             print(f"[오류] 사용자 데이터 로드 실패: {error}")
-            return None
+            backup_data = self.backup_module.load_latest_backup(self.users_path)
+            if backup_data is None:
+                return None
+            if not isinstance(backup_data, list) or any(
+                not isinstance(item, dict)
+                for item in backup_data
+            ) or any(
+                "name" not in item or "total_hours" not in item
+                for item in backup_data
+            ):
+                print("[오류] 백업 사용자 데이터 형식이 올바르지 않습니다.")
+                return None
+            if not self.backup_module.restore_latest_backup(self.users_path):
+                print("[오류] 백업 사용자 데이터를 원본 파일에 복원하지 못했습니다.")
+                return None
+            try:
+                restored_users = self.repository.load_records(
+                    self.users_path,
+                    required_fields=("name", "total_hours"),
+                )
+            except JsonRepositoryError as restore_error:
+                print(f"[오류] 복원된 사용자 데이터 검증 실패: {restore_error}")
+                return None
+            print("[안내] 백업 사용자 데이터를 원본 파일에 복원했습니다.")
+            return restored_users
 
     @staticmethod
     def _validate_hours(hours: Any) -> dict[str, Any] | None:

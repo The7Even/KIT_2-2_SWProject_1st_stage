@@ -5,5 +5,26 @@
     "rating": 5,
     "text": "가상 리뷰",
     "created_at": "2026-09-12T17:40:00"
+  },
+  {
+    "activity_id": 47190126000101,
+    "rating": 5,
+    "text": "학교 내 활동이라 편하고 인원이 많아 꽤 힘들지 않았던 활동이었음",
+    "review_id": 2,
+    "created_at": "2026-09-24T15:12:25"
+  },
+  {
+    "activity_id": 47113000000101,
+    "rating": 4,
+    "text": "모의후기",
+    "review_id": 3,
+    "created_at": "2026-09-24T15:32:27"
+  },
+  {
+    "activity_id": 47190126000101,
+    "rating": 5,
+    "text": "신규후기",
+    "review_id": 4,
+    "created_at": "2026-09-24T15:40:50"
   }
 ]

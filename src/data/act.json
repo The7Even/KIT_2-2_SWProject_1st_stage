@@ -9,5 +9,27 @@
     "service_hours": 2,
     "status": 1,
     "rating": 4.5
+  },
+  {
+    "facility_id": 471901260001,
+    "title": "생활관 미화작업",
+    "description": "생활관 근처 쓰레기 청소 작업",
+    "location": "경상북도 경상북도 구미시 경상북도 구미시 양호동 대학로 61",
+    "schedule_date": "2026-09-26",
+    "service_hours": 2,
+    "activity_id": 47190126000101,
+    "status": 1,
+    "rating": 5.0
+  },
+  {
+    "facility_id": 471130000001,
+    "title": "모의활동1",
+    "description": "모의",
+    "location": "경상북도 포항시 북구 우창동로 18",
+    "schedule_date": "2026-09-30",
+    "service_hours": 4,
+    "activity_id": 47113000000101,
+    "status": 1,
+    "rating": 4.0
   }
 ]

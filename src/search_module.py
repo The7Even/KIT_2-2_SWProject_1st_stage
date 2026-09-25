@@ -1,7 +1,13 @@
 import os
 from collections.abc import Callable
 
-from .region_code_client import RegionCodeApiError, RegionCodeClient
+from .region_code_client import (
+    LocalRegionCodeClient,
+    RegionCodeApiError,
+    RegionCodeClient,
+)
+from .backup_module import BackupModule
+from .app_logging import logger
 from .json_repository import JsonRepository, JsonRepositoryError
 
 DATA_FILE = os.path.join(os.path.dirname(__file__), "data", "act.json")
@@ -12,21 +18,23 @@ class SearchModule:
         self,
         data_path: str = DATA_FILE,
         repository: JsonRepository | None = None,
-        region_client: RegionCodeClient | None = None,
+        region_client: RegionCodeClient | LocalRegionCodeClient | None = None,
         region_resolver: Callable[[str], list[dict[str, str]]] | None = None,
+        backup_module: BackupModule | None = None,
     ):
         self.data_path = data_path
         self.repository = repository or JsonRepository()
-        self.region_client = region_client
+        self.region_client = region_client or LocalRegionCodeClient()
         self.region_resolver = region_resolver
+        self.backup_module = backup_module or BackupModule(repository=self.repository)
 
     def _load_activities(self) -> list[dict]:
         """act.json 파일에서 활동 데이터를 로드합니다."""
         try:
-            return self.repository.load_records(
-                self.data_path,
-                required_fields=("title", "location"),
+            results = self.backup_module.load_records_with_backup(
+                self.data_path, ("title", "location")
             )
+            return results
         except JsonRepositoryError as e:
             print(f"[오류] 데이터 로드 실패: {e}")
             return []

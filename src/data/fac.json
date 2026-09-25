@@ -4,5 +4,17 @@
     "facility_name": "가상활동센터",
     "location": "경상북도 구미시 대학로 61",
     "contact": "054-123-4567"
+  },
+  {
+    "facility_name": "모의시설1",
+    "location": "경상북도 포항시 북구 우창동로 18",
+    "contact": "010-0482-5582",
+    "facility_id": 471130000001
+  },
+  {
+    "facility_name": "금오공과대학교",
+    "location": "경상북도 경상북도 구미시 경상북도 구미시 양호동 대학로 61",
+    "contact": "054-000-0000",
+    "facility_id": 471901260001
   }
 ]

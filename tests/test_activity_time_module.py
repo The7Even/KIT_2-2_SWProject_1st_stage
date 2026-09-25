@@ -51,6 +51,16 @@ class ActivityTimeModuleTests(unittest.TestCase):
         self.assertEqual(result["error_code"], "E_USER_NOT_FOUND")
         self.assertEqual(self.module.get_total_hours(), 12)
 
+    def test_corrupted_user_data_uses_latest_backup(self):
+        self.module.backup_module.backup([self.users_path])
+        self.users_path.write_text("{broken", encoding="utf-8")
+
+        self.assertEqual(self.module.get_total_hours(), 12)
+        self.assertEqual(
+            JsonRepository().load(self.users_path),
+            [{"name": "테스트 사용자", "total_hours": 12}],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

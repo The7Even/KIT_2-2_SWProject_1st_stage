@@ -7,6 +7,7 @@ from typing import Any
 
 from .backup_module import BackupModule
 from .json_repository import JsonRepository, JsonRepositoryError
+from .app_logging import logger
 
 
 REVIEWS_FILE = os.path.join(os.path.dirname(__file__), "data", "rev.json")
@@ -34,9 +35,9 @@ class ReviewModule:
             return []
 
         try:
-            reviews = self.repository.load_records(
+            reviews = self.backup_module.load_records_with_backup(
                 self.reviews_path,
-                required_fields=("review_id", "activity_id", "rating", "text"),
+                ("review_id", "activity_id", "rating", "text"),
             )
         except JsonRepositoryError as error:
             print(f"[오류] 후기 데이터 로드 실패: {error}")
@@ -55,13 +56,11 @@ class ReviewModule:
 
         activity_id = review["activity_id"]
         try:
-            reviews = self.repository.load_records(
-                self.reviews_path,
-                required_fields=("review_id", "activity_id", "rating", "text"),
+            reviews = self.backup_module.load_records_with_backup(
+                self.reviews_path, ("review_id", "activity_id", "rating", "text")
             )
-            activities = self.repository.load_records(
-                self.activities_path,
-                required_fields=("activity_id", "rating"),
+            activities = self.backup_module.load_records_with_backup(
+                self.activities_path, ("activity_id", "rating")
             )
         except JsonRepositoryError as error:
             return self._failure("E_FAILED_UPDATE", str(error))
@@ -107,6 +106,11 @@ class ReviewModule:
             self._restore(original_reviews, original_activities)
             return self._failure("E_FAILED_UPDATE", str(error))
 
+        logger.info(
+            "review_submitted activity_id=%s review_id=%s",
+            activity_id,
+            new_review["review_id"],
+        )
         return {
             "success": True,
             "review_id": new_review["review_id"],
